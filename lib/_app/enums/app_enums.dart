@@ -1,0 +1,2 @@
+enum LoginScreenView{landingScreen,signUpScreen,loginScreen, homeScreen}
+enum ProductsScreenView{homeScreen, productDetailsScreen}
