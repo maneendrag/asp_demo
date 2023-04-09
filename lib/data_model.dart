@@ -4,12 +4,18 @@ part 'data_model.g.dart';
 
 @HiveType(typeId: 0)
 class DataModel{
-  @HiveField(0)
-   String? title;
-  @HiveField(1)
-   String? description;
-  @HiveField(2)
-   bool? complete;
 
+  @HiveField(0)
+  String? userID;
+  @HiveField(1)
+   bool? isLoggedIn;
+  @HiveField(2)
+  String? displayName;
+  @HiveField(3)
+  String? userPhone;
+  @HiveField(4)
+  String? userEmail;
+  @HiveField(6)
+  int? cartCount;
 
 }

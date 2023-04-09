@@ -3,6 +3,8 @@ import 'package:asp_base/_app/app.router.dart';
 import 'package:asp_base/_app/enums/app_enums.dart';
 import 'package:asp_base/_services/api_service.dart';
 import 'package:asp_base/_services/failure.dart';
+import 'package:asp_base/data_model.dart';
+import 'package:asp_base/hive_config.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +17,6 @@ class LoginViewModel extends BaseViewModel {
   final HttpService _httpService = locator<HttpService>();
   final SnackbarService snackbarService = locator<SnackbarService>();
   final NavigationService navigationService = locator<NavigationService>();
-
 
   //SignUp text field controllers
   TextEditingController nameController = TextEditingController();
@@ -31,20 +32,20 @@ class LoginViewModel extends BaseViewModel {
   bool passwordError = false;
   bool nameErrorText = false;
 
+  final DataModel _appLevelModel =
+      HiveConfig.getSingleObject<DataModel>(HiveBox.DataModel);
 
   bool validateEmail(email) {
     print("Ema---> $email");
 
-      Pattern pattern =
-          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-      RegExp regex = RegExp(pattern.toString());
-      if (regex.hasMatch(email)) {
-       return true;
-      } else {
-        return false;
-      }
-
-
+    Pattern pattern =
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+    RegExp regex = RegExp(pattern.toString());
+    if (regex.hasMatch(email)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<User?> registerUsingEmailPassword() async {
@@ -53,7 +54,7 @@ class LoginViewModel extends BaseViewModel {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
 
-        try {
+    try {
       print("Entered try ny view model");
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
         email: eMailController.text,
@@ -61,7 +62,7 @@ class LoginViewModel extends BaseViewModel {
       );
       user = userCredential.user;
       await user!.updateDisplayName(nameController.text);
-      // await user.updatePhoneNumber(phoneNumberController.);
+      // await user.updatePhoneNumber(phoneNumberController.text);
       await user.reload();
 
       user = auth.currentUser;
@@ -73,11 +74,18 @@ class LoginViewModel extends BaseViewModel {
             role: "User",
             userMail: auth.currentUser!.email.toString(),
             userName: auth.currentUser!.displayName.toString(),
-            userPhone: "9909089898");
+            userPhone: "9999999999");
         navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
+        _appLevelModel.userID = auth.currentUser!.uid.toString();
+        _appLevelModel.displayName = auth.currentUser!.displayName;
+        _appLevelModel.userPhone = phoneNumberController.text.toString();
+        _appLevelModel.isLoggedIn = true;
+
+
+        await HiveConfig.putSingleObject(HiveBox.DataModel, _appLevelModel);
         setBusy(false);
       } else {
-       snackbarService.showSnackbar(message: "User Sign Up Failed");
+        snackbarService.showSnackbar(message: "User Sign Up Failed");
         setBusy(false);
       }
 
@@ -95,61 +103,70 @@ class LoginViewModel extends BaseViewModel {
       setBusy(false);
     }
   }
-  printCheck(){
+
+  printCheck() {
     print("Check print in view model");
   }
 
-  SignUpUserWithLogin(){
+  signUpUserWithLogin() {
     print("Entered in sign up in view model");
-    if(nameController.text.isEmpty){
+    if (nameController.text.isEmpty) {
       snackbarService.showSnackbar(message: "Name Text field is empty");
-    }else if(eMailController.text.isEmpty || validateEmail(eMailController.text) == false){
+    } else if (eMailController.text.isEmpty ||
+        validateEmail(eMailController.text) == false) {
       snackbarService.showSnackbar(message: "Please check Email Field");
-    }else if(phoneNumberController.text.isEmpty || phoneNumberController.text.length > 10){
+    } else if (phoneNumberController.text.isEmpty ||
+        phoneNumberController.text.length > 10) {
       snackbarService.showSnackbar(message: "Please check Phone Number Field");
-    }else if(passwordController.text.isEmpty ){
+    } else if (passwordController.text.isEmpty) {
       snackbarService.showSnackbar(message: "Password Text field is empty");
-    }else if(confirmPasswordController.text.isEmpty ){
-      snackbarService.showSnackbar(message: "Confirm Password Text field is empty");
-    }else if(passwordController.text != confirmPasswordController.text){
+    } else if (confirmPasswordController.text.isEmpty) {
+      snackbarService.showSnackbar(
+          message: "Confirm Password Text field is empty");
+    } else if (passwordController.text != confirmPasswordController.text) {
       snackbarService.showSnackbar(message: "Please check the password");
-    }
-    else{
+    } else {
       print("Entered else");
       registerUsingEmailPassword();
     }
   }
 
-  loginClicked(){
-    if(loginEmailController.text.isEmpty || validateEmail(loginEmailController.text) == false)
-      {
-        snackbarService.showSnackbar(message: "Check Email Text Field");
-      }else if(loginPasswordController.text.isEmpty){
+  loginClicked() {
+    if (loginEmailController.text.isEmpty ||
+        validateEmail(loginEmailController.text) == false) {
+      snackbarService.showSnackbar(message: "Check Email Text Field");
+    } else if (loginPasswordController.text.isEmpty) {
       snackbarService.showSnackbar(message: "Check Password Text Field");
-    }else{
+    } else {
       loginWithFirebase();
       snackbarService.showSnackbar(message: "Login Success");
       navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
-
     }
   }
 
   Future<User?> loginWithFirebase() async {
-print("Entered login");
+    print("Entered login");
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     setBusy(true);
     try {
       final credential = await auth.signInWithEmailAndPassword(
-          email: loginEmailController.text, password: loginPasswordController.text);
+          email: loginEmailController.text,
+          password: loginPasswordController.text);
       user = credential.user;
-     if( auth.currentUser != null) {
-       print("User successful login ====> ${user!.email.toString()}");
-       print("User successful login ====> ${user!.displayName.toString()}");
-       navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
-       setBusy(false);
-     }
-      else{
+      if (auth.currentUser != null) {
+        print("User successful login ====> ${user!.email.toString()}");
+        print("User successful login ====> ${user.displayName.toString()}");
+        _appLevelModel.userID = user.uid.toString();
+        _appLevelModel.isLoggedIn = true;
+        await HiveConfig.putSingleObject(HiveBox.DataModel, _appLevelModel);
+
+        navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
+
+        print(_appLevelModel.userID);
+
+        setBusy(false);
+      } else {
         print("User unsuccessful login");
         setBusy(false);
       }
@@ -160,7 +177,8 @@ print("Entered login");
         setBusy(false);
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
-        snackbarService.showSnackbar(message: "Wrong password provided for that user");
+        snackbarService.showSnackbar(
+            message: "Wrong password provided for that user");
 
         setBusy(false);
       }
@@ -312,17 +330,14 @@ mutation MyMutation($user_email: String!, $user_name: String!, $role: String!, $
     notifyListeners();
   }
 
-   /*=============================================================
+  /*=============================================================
     <===================For Login Screen=========================>
     =============================================================*/
 
   bool obscureText = true;
-  playLoginObscure(){
+  playLoginObscure() {
     print("Tapped Obscure");
-    obscureText =! obscureText;
+    obscureText = !obscureText;
     notifyListeners();
   }
-
-
-
 }

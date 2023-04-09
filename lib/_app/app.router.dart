@@ -5,6 +5,7 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:asp_base/screen/cart/cart_screen.dart' as _i9;
 import 'package:asp_base/screen/home/edit_profile/edit_profile_screen.dart'
     as _i7;
 import 'package:asp_base/screen/home/home_screen.dart' as _i6;
@@ -14,10 +15,10 @@ import 'package:asp_base/screen/login/screens/landing_screen.dart' as _i3;
 import 'package:asp_base/screen/login/screens/login_screen.dart' as _i4;
 import 'package:asp_base/screen/login/screens/signUpScreen.dart' as _i5;
 import 'package:asp_base/screen/splash_screen.dart' as _i2;
-import 'package:flutter/material.dart' as _i9;
+import 'package:flutter/material.dart' as _i10;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i10;
+import 'package:stacked_services/stacked_services.dart' as _i11;
 
 class Routes {
   static const splashScreen = '/';
@@ -34,6 +35,8 @@ class Routes {
 
   static const productDetailsScreen = '/product-details-screen';
 
+  static const cartScreen = '/cart-screen';
+
   static const all = <String>{
     splashScreen,
     landingScreen,
@@ -42,6 +45,7 @@ class Routes {
     homeScreen,
     editProfileScreen,
     productDetailsScreen,
+    cartScreen,
   };
 }
 
@@ -74,6 +78,10 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.productDetailsScreen,
       page: _i8.ProductDetailsScreen,
+    ),
+    _i1.RouteDef(
+      Routes.cartScreen,
+      page: _i9.CartScreen,
     ),
   ];
 
@@ -127,6 +135,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
+    _i9.CartScreen: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const _i9.CartScreen(),
+        settings: data,
+      );
+    },
   };
 
   @override
@@ -138,7 +152,7 @@ class StackedRouter extends _i1.RouterBase {
 class LandingScreenArguments {
   const LandingScreenArguments({this.key});
 
-  final _i9.Key? key;
+  final _i10.Key? key;
 }
 
 class ProductDetailsScreenArguments {
@@ -147,12 +161,12 @@ class ProductDetailsScreenArguments {
     this.productID,
   });
 
-  final _i9.Key? key;
+  final _i10.Key? key;
 
   final int? productID;
 }
 
-extension NavigatorStateExtension on _i10.NavigationService {
+extension NavigatorStateExtension on _i11.NavigationService {
   Future<dynamic> navigateToSplashScreen([
     int? routerId,
     bool preventDuplicates = true,
@@ -168,7 +182,7 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> navigateToLandingScreen({
-    _i9.Key? key,
+    _i10.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -240,7 +254,7 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> navigateToProductDetailsScreen({
-    _i9.Key? key,
+    _i10.Key? key,
     int? productID,
     int? routerId,
     bool preventDuplicates = true,
@@ -251,6 +265,20 @@ extension NavigatorStateExtension on _i10.NavigationService {
     return navigateTo<dynamic>(Routes.productDetailsScreen,
         arguments:
             ProductDetailsScreenArguments(key: key, productID: productID),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToCartScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.cartScreen,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -272,7 +300,7 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> replaceWithLandingScreen({
-    _i9.Key? key,
+    _i10.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -344,7 +372,7 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> replaceWithProductDetailsScreen({
-    _i9.Key? key,
+    _i10.Key? key,
     int? productID,
     int? routerId,
     bool preventDuplicates = true,
@@ -355,6 +383,20 @@ extension NavigatorStateExtension on _i10.NavigationService {
     return replaceWith<dynamic>(Routes.productDetailsScreen,
         arguments:
             ProductDetailsScreenArguments(key: key, productID: productID),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithCartScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.cartScreen,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

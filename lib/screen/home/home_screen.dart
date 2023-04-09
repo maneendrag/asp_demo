@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
         case ProductsScreenView.homeScreen:
           return ProductsScreen();
         case ProductsScreenView.productDetailsScreen:
-          return Scaffold(
+          return const Scaffold(
             body: Center(child: Text("Product details Screen"),),
           );
 

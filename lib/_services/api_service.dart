@@ -61,6 +61,22 @@ class HttpService {
     return response;
   }
 
+  Future mutation(document, {variables, showLoading = true}) async {
+    var response;
+
+    bool sts = await _connection.checkConnection();
+    if (!sts) return null;
+    try {
+      response =
+      await _hasuraConnect.mutation(document, variables: variables ?? {});
+      response = response['data'];
+    } catch (e, s) {
+      print("$e , $s");
+      // showHasuraError(e);
+    }
+    if (showLoading) const CircularProgressIndicator(color: Colors.green,);
+    return response;
+  }
 
 // Future<HasuraConnect> hC() async {
   //   return HasuraConnect(
@@ -135,37 +151,38 @@ class HttpService {
   //   }
   // }
   //
-  Future<Either<dynamic, HasuraFailure>> mutation(String document,
-      {Map<String, dynamic> variables = const {},
-        bool showLoading = false}) async {
-    try {
-      if (await _connection.status == ConnectivityResult.none) {
-        return Right(HasuraFailure(message: "No interner"));
-      }
-      _hasuraConnect.isConnected;
-      final dynamic mutationResponseData =
-      await _hasuraConnect.mutation(document, variables: variables);
-      return Left(mutationResponseData['data']);
-    } on HasuraRequestError catch (error) {
-      print('ERROR => Invalid Query => ${error.message}');
-      return Right(HasuraFailure(message: "Invalid Query"));
-    } on ConnectionError catch (error) {
-      print('ERROR => Connection Failed => ${error.message}}');
-      return Right(HasuraFailure(message: error.message, error: error));
-    } on InvalidRequestError catch (error) {
-      print('ERROR => Invalid Request => $error}');
-      return Right(HasuraFailure(message: "Invalid Request"));
-    } on InterceptorError catch (error) {
-      print('ERROR => Interceptor Error => $error}');
-      return Right(HasuraFailure(message: "Intercepter Error"));
-    } on DatasourceError catch (error) {
-      print('ERROR => DataSource Error => $error}');
-      return Right(HasuraFailure(message: "Data error"));
-    } catch (error) {
-      print('ERROR => Unknown Error => $error}');
-      return Right(HasuraFailure(message: "Somethings wrong"));
-    }
-  }
+
+  // Future<Either<dynamic, HasuraFailure>> mutation(String document,
+  //     {Map<String, dynamic> variables = const {},
+  //       bool showLoading = false}) async {
+  //   try {
+  //     if (await _connection.status == ConnectivityResult.none) {
+  //       return Right(HasuraFailure(message: "No interner"));
+  //     }
+  //     _hasuraConnect.isConnected;
+  //     final dynamic mutationResponseData =
+  //     await _hasuraConnect.mutation(document, variables: variables);
+  //     return Left(mutationResponseData['data']);
+  //   } on HasuraRequestError catch (error) {
+  //     print('ERROR => Invalid Query => ${error.message}');
+  //     return Right(HasuraFailure(message: "Invalid Query"));
+  //   } on ConnectionError catch (error) {
+  //     print('ERROR => Connection Failed => ${error.message}}');
+  //     return Right(HasuraFailure(message: error.message, error: error));
+  //   } on InvalidRequestError catch (error) {
+  //     print('ERROR => Invalid Request => $error}');
+  //     return Right(HasuraFailure(message: "Invalid Request"));
+  //   } on InterceptorError catch (error) {
+  //     print('ERROR => Interceptor Error => $error}');
+  //     return Right(HasuraFailure(message: "Intercepter Error"));
+  //   } on DatasourceError catch (error) {
+  //     print('ERROR => DataSource Error => $error}');
+  //     return Right(HasuraFailure(message: "Data error"));
+  //   } catch (error) {
+  //     print('ERROR => Unknown Error => $error}');
+  //     return Right(HasuraFailure(message: "Somethings wrong"));
+  //   }
+  // }
 
 
 

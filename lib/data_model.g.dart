@@ -17,21 +17,30 @@ class DataModelAdapter extends TypeAdapter<DataModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return DataModel()
-      ..title = fields[0] as String?
-      ..description = fields[1] as String?
-      ..complete = fields[2] as bool?;
+      ..userID = fields[0] as String?
+      ..isLoggedIn = fields[1] as bool?
+      ..displayName = fields[2] as String?
+      ..userPhone = fields[3] as String?
+      ..userEmail = fields[4] as String?
+      ..cartCount = fields[6] as int?;
   }
 
   @override
   void write(BinaryWriter writer, DataModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(6)
       ..writeByte(0)
-      ..write(obj.title)
+      ..write(obj.userID)
       ..writeByte(1)
-      ..write(obj.description)
+      ..write(obj.isLoggedIn)
       ..writeByte(2)
-      ..write(obj.complete);
+      ..write(obj.displayName)
+      ..writeByte(3)
+      ..write(obj.userPhone)
+      ..writeByte(4)
+      ..write(obj.userEmail)
+      ..writeByte(6)
+      ..write(obj.cartCount);
   }
 
   @override

@@ -13,6 +13,7 @@ import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 
 import '../_services/api_service.dart';
+import '../_services/cart_service.dart';
 import '../_services/connectivity_service.dart';
 import '../_services/http_service.dart';
 import '../_services/size_config_service.dart';
@@ -36,4 +37,5 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => SizeConfigService());
+  locator.registerLazySingleton(() => CartService());
 }

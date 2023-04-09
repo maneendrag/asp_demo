@@ -93,6 +93,7 @@ class SignUpScreen extends StackedHookView<LoginViewModel> {
                         controller: model.phoneNumberController,
                         keyboardType: TextInputType.phone,
                         style: const TextStyle(color: Color(0xffBBE1FA)),
+                        maxLength: 10,
                         decoration: const InputDecoration(
                           labelText: "Phone No",
                           labelStyle: TextStyle(color: Color(0xff3282B8)),
@@ -115,13 +116,13 @@ class SignUpScreen extends StackedHookView<LoginViewModel> {
                         controller: model.passwordController,
                         keyboardType: TextInputType.name,
                         style: const TextStyle(color: Color(0xffBBE1FA)),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
 
                           labelText: "Password",
                           labelStyle: TextStyle(color: Color(0xff3282B8)),
                           hintText: 'Enter Your Password',
                           hintStyle: TextStyle(color: Color(0xff3282B8)),
-                          enabledBorder: const OutlineInputBorder(
+                          enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 3,
                                 color: Color(0xffBBE1FA)), //<-- SEE HERE
@@ -159,7 +160,7 @@ class SignUpScreen extends StackedHookView<LoginViewModel> {
                       child: GestureDetector(
                         onTap: () {
                           print("tapped on view");
-                          model.SignUpUserWithLogin();
+                          model.signUpUserWithLogin();
                         },
                         // onTap: ()=> model.registerUsingEmailPassword(email: model.eMailController.text, password: model.passwordController.text),
                         child: Container(
