@@ -47,6 +47,7 @@ class MyApp extends StatelessWidget {
         locator<SizeConfigService>().init(constraints, orientation);
         return MaterialApp(
           theme: ThemeData(scaffoldBackgroundColor: const Color(0xff1B262C),
+            appBarTheme: AppBarTheme(backgroundColor: const Color(0xff1B262C),),
             unselectedWidgetColor: Colors.white,
           ),
           onGenerateRoute: StackedRouter().onGenerateRoute,

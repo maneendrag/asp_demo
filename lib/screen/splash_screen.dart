@@ -28,8 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
        navigationService.pushNamedAndRemoveUntil(Routes.landingScreen);
      }
       else{
-        // navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
-        navigationService.pushNamedAndRemoveUntil(Routes.cartScreen);
+        // navigationService.pushNamedAndRemoveUntil(Routes.categoriesScreen);
+        navigationService.pushNamedAndRemoveUntil(Routes.productsScreen);
       };
     });
   }

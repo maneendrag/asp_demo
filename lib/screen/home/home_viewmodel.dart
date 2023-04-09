@@ -9,7 +9,6 @@ import 'package:stacked_services/stacked_services.dart';
 import '../customViewModels.dart';
 
 class HomeScreenViewModel extends CustomBaseViewModel {
-
   final ApiService _apiService = locator<ApiService>();
   final SizeConfigService sizeConfigService = locator<SizeConfigService>();
   final NavigationService navigationService = locator<NavigationService>();
@@ -87,14 +86,15 @@ class HomeScreenViewModel extends CustomBaseViewModel {
 //     }
 //   }
 
-  Future getDat() async{
-    try{
+  Future getDat() async {
+    try {
       print("entered try state");
 
       var jsonResponse =
-      await _apiService.get("https://fakestoreapi.com/products");
+          await _apiService.get("https://fakestoreapi.com/products");
 
-      ProductsResponse res = ProductsResponse.fromJson({'data':jsonResponse.data});
+      ProductsResponse res =
+          ProductsResponse.fromJson({'data': jsonResponse.data});
 
       productsResponseeList.addAll(res.data!);
       print("PIN DATAARR --------> ${productsResponseeList}");
@@ -102,38 +102,37 @@ class HomeScreenViewModel extends CustomBaseViewModel {
       print("Type ====> ${res.data!.length}");
       print("Type ====> ${res.data![0].image}");
 
-notifyListeners();
+      notifyListeners();
 
       // Map<String, dynamic> data = jsonDecode(jsonResponse.toString());
 
       // print("The data ====> $dataResponse");
-
-    }catch(e){
+    } catch (e) {
       print("WhTA THE EXCEPTION ====> $e");
-
     }
   }
 
-  Future getHomeProducts() async{
+  Future getHomeProducts(String categoryName,{required bool isFromCategoriesScreen}) async {
     setBusy(true);
-    try{
+    try {
       print("entered Home try state");
 
-      var jsonResponse =
-      await _apiService.get("https://dummyjson.com/products?limit=20");
+      String url = isFromCategoriesScreen
+          ? "https://dummyjson.com/products/category/$categoryName"
+      : "https://dummyjson.com/products?limit=20";
+
+      var jsonResponse = await _apiService.get(url);
 
       print("Data ======> $jsonResponse");
 
-      HomeProducts res = HomeProducts.fromJson({'data':jsonResponse.data['products']});
+      HomeProducts res =
+          HomeProducts.fromJson({'data': jsonResponse.data['products']});
 
-
-      if(res.data!.isNotEmpty){
+      if (res.data!.isNotEmpty) {
         productsResponseList.addAll(res.data!);
         setBusy(false);
         print("PIN DATAARR --------> ${productsResponseList[0].title}");
-
-
-      }else{
+      } else {
         [];
         setBusy(false);
       }
@@ -141,13 +140,12 @@ notifyListeners();
       // print("Type ====> ${res.data!.length}");
       // print("Type ====> ${res.data![0].image}");
 
-notifyListeners();
+      notifyListeners();
 
       // Map<String, dynamic> data = jsonDecode(jsonResponse.toString());
 
       // print("The data ====> $dataResponse");
-
-    }catch(e){
+    } catch (e) {
       print("WhTA THE HOme EXCEPTION ====> $e");
       setBusy(false);
     }
@@ -242,29 +240,27 @@ notifyListeners();
   @override
   initLogger() {}
 
-  navigateToEditProfileScreen(){
+  navigateToEditProfileScreen() {
     navigationService.navigateTo(Routes.editProfileScreen);
     notifyListeners();
   }
 
-
-
-  navigateToHomeScreen(){
+  navigateToHomeScreen() {
     changeView(ProductsScreenView.homeScreen);
   }
 
-  navigateToProductDetailsScreen(int productId){
-    navigationService.navigateTo(Routes.productDetailsScreen,arguments: ProductDetailsScreenArguments(productID: productId));
+  navigateToProductDetailsScreen(int productId) {
+    navigationService.navigateTo(Routes.productDetailsScreen,
+        arguments: ProductDetailsScreenArguments(productID: productId));
   }
 
+  navigateToCategoriesScreen() {
+    navigationService.navigateTo(Routes.categoriesScreen);
+  }
 
   changeView(ProductsScreenView view) {
     print("Change view tapped");
     currentView = view;
     notifyListeners();
   }
-
-
-
-
 }

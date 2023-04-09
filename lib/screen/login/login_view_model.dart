@@ -75,7 +75,7 @@ class LoginViewModel extends BaseViewModel {
             userMail: auth.currentUser!.email.toString(),
             userName: auth.currentUser!.displayName.toString(),
             userPhone: "9999999999");
-        navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
+        navigationService.pushNamedAndRemoveUntil(Routes.productsScreen,arguments: ProductsScreenArguments(categoryName: "",isFromCategories: false));
         _appLevelModel.userID = auth.currentUser!.uid.toString();
         _appLevelModel.displayName = auth.currentUser!.displayName;
         _appLevelModel.userPhone = phoneNumberController.text.toString();
@@ -140,7 +140,7 @@ class LoginViewModel extends BaseViewModel {
     } else {
       loginWithFirebase();
       snackbarService.showSnackbar(message: "Login Success");
-      navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
+      navigationService.pushNamedAndRemoveUntil(Routes.productsScreen,arguments: ProductsScreenArguments(categoryName: "",isFromCategories: false));
     }
   }
 
@@ -161,7 +161,7 @@ class LoginViewModel extends BaseViewModel {
         _appLevelModel.isLoggedIn = true;
         await HiveConfig.putSingleObject(HiveBox.DataModel, _appLevelModel);
 
-        navigationService.pushNamedAndRemoveUntil(Routes.homeScreen);
+        navigationService.pushNamedAndRemoveUntil(Routes.productsScreen,arguments: ProductsScreenArguments(categoryName: "",isFromCategories: false));
 
         print(_appLevelModel.userID);
 

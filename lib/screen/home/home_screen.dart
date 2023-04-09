@@ -12,11 +12,11 @@ class HomeScreen extends StatelessWidget {
 
     return ViewModelBuilder<HomeScreenViewModel>.reactive(
         viewModelBuilder: ()=>HomeScreenViewModel(),
-        onViewModelReady: (model) => model.getHomeProducts(),
+        // onViewModelReady: (model) => model.getHomeProducts(),
         builder: (context, model,child){
       switch(model.currentView){
         case ProductsScreenView.homeScreen:
-          return ProductsScreen();
+          return Placeholder();
         case ProductsScreenView.productDetailsScreen:
           return const Scaffold(
             body: Center(child: Text("Product details Screen"),),

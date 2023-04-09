@@ -3,9 +3,11 @@ import 'package:asp_base/_services/cart_service.dart';
 import 'package:asp_base/_services/http_service.dart';
 import 'package:asp_base/_services/size_config_service.dart';
 import 'package:asp_base/screen/cart/cart_screen.dart';
+import 'package:asp_base/screen/categories/categories_screen.dart';
 import 'package:asp_base/screen/home/edit_profile/edit_profile_screen.dart';
 import 'package:asp_base/screen/home/home_screen.dart';
 import 'package:asp_base/screen/home/screens/product_details/product_details_screen.dart';
+import 'package:asp_base/screen/home/screens/products/products_screen.dart';
 import 'package:asp_base/screen/login/screens/landing_screen.dart';
 import 'package:asp_base/screen/login/screens/login_screen.dart';
 import 'package:asp_base/screen/login/screens/signUpScreen.dart';
@@ -23,10 +25,11 @@ MaterialRoute(initial: true,page: SplashScreen),
 MaterialRoute(page: LandingScreen),
 MaterialRoute(page: LoginScreen),
 MaterialRoute(page: SignUpScreen),
-MaterialRoute(page: HomeScreen),
+MaterialRoute(page: ProductsScreen),
 MaterialRoute(page: EditProfileScreen),
 MaterialRoute(page: ProductDetailsScreen),
 MaterialRoute(page: CartScreen),
+MaterialRoute(page: CategoriesScreen),
 
 ], dependencies: [
   LazySingleton(classType: HttpService),

@@ -6,19 +6,21 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:asp_base/screen/cart/cart_screen.dart' as _i9;
+import 'package:asp_base/screen/categories/categories_screen.dart' as _i10;
 import 'package:asp_base/screen/home/edit_profile/edit_profile_screen.dart'
     as _i7;
-import 'package:asp_base/screen/home/home_screen.dart' as _i6;
 import 'package:asp_base/screen/home/screens/product_details/product_details_screen.dart'
     as _i8;
+import 'package:asp_base/screen/home/screens/products/products_screen.dart'
+    as _i6;
 import 'package:asp_base/screen/login/screens/landing_screen.dart' as _i3;
 import 'package:asp_base/screen/login/screens/login_screen.dart' as _i4;
 import 'package:asp_base/screen/login/screens/signUpScreen.dart' as _i5;
 import 'package:asp_base/screen/splash_screen.dart' as _i2;
-import 'package:flutter/material.dart' as _i10;
+import 'package:flutter/material.dart' as _i11;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i11;
+import 'package:stacked_services/stacked_services.dart' as _i12;
 
 class Routes {
   static const splashScreen = '/';
@@ -29,7 +31,7 @@ class Routes {
 
   static const signUpScreen = '/sign-up-screen';
 
-  static const homeScreen = '/home-screen';
+  static const productsScreen = '/products-screen';
 
   static const editProfileScreen = '/edit-profile-screen';
 
@@ -37,15 +39,18 @@ class Routes {
 
   static const cartScreen = '/cart-screen';
 
+  static const categoriesScreen = '/categories-screen';
+
   static const all = <String>{
     splashScreen,
     landingScreen,
     loginScreen,
     signUpScreen,
-    homeScreen,
+    productsScreen,
     editProfileScreen,
     productDetailsScreen,
     cartScreen,
+    categoriesScreen,
   };
 }
 
@@ -68,8 +73,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i5.SignUpScreen,
     ),
     _i1.RouteDef(
-      Routes.homeScreen,
-      page: _i6.HomeScreen,
+      Routes.productsScreen,
+      page: _i6.ProductsScreen,
     ),
     _i1.RouteDef(
       Routes.editProfileScreen,
@@ -82,6 +87,10 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.cartScreen,
       page: _i9.CartScreen,
+    ),
+    _i1.RouteDef(
+      Routes.categoriesScreen,
+      page: _i10.CategoriesScreen,
     ),
   ];
 
@@ -113,9 +122,15 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i6.HomeScreen: (data) {
+    _i6.ProductsScreen: (data) {
+      final args = data.getArgs<ProductsScreenArguments>(
+        orElse: () => const ProductsScreenArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i6.HomeScreen(),
+        builder: (context) => _i6.ProductsScreen(
+            key: args.key,
+            isFromCategories: args.isFromCategories,
+            categoryName: args.categoryName),
         settings: data,
       );
     },
@@ -141,6 +156,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
+    _i10.CategoriesScreen: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const _i10.CategoriesScreen(),
+        settings: data,
+      );
+    },
   };
 
   @override
@@ -152,7 +173,21 @@ class StackedRouter extends _i1.RouterBase {
 class LandingScreenArguments {
   const LandingScreenArguments({this.key});
 
-  final _i10.Key? key;
+  final _i11.Key? key;
+}
+
+class ProductsScreenArguments {
+  const ProductsScreenArguments({
+    this.key,
+    this.isFromCategories = false,
+    this.categoryName = "",
+  });
+
+  final _i11.Key? key;
+
+  final bool isFromCategories;
+
+  final String categoryName;
 }
 
 class ProductDetailsScreenArguments {
@@ -161,12 +196,12 @@ class ProductDetailsScreenArguments {
     this.productID,
   });
 
-  final _i10.Key? key;
+  final _i11.Key? key;
 
   final int? productID;
 }
 
-extension NavigatorStateExtension on _i11.NavigationService {
+extension NavigatorStateExtension on _i12.NavigationService {
   Future<dynamic> navigateToSplashScreen([
     int? routerId,
     bool preventDuplicates = true,
@@ -182,7 +217,7 @@ extension NavigatorStateExtension on _i11.NavigationService {
   }
 
   Future<dynamic> navigateToLandingScreen({
-    _i10.Key? key,
+    _i11.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -225,14 +260,21 @@ extension NavigatorStateExtension on _i11.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToHomeScreen([
+  Future<dynamic> navigateToProductsScreen({
+    _i11.Key? key,
+    bool isFromCategories = false,
+    String categoryName = "",
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
-    return navigateTo<dynamic>(Routes.homeScreen,
+  }) async {
+    return navigateTo<dynamic>(Routes.productsScreen,
+        arguments: ProductsScreenArguments(
+            key: key,
+            isFromCategories: isFromCategories,
+            categoryName: categoryName),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -254,7 +296,7 @@ extension NavigatorStateExtension on _i11.NavigationService {
   }
 
   Future<dynamic> navigateToProductDetailsScreen({
-    _i10.Key? key,
+    _i11.Key? key,
     int? productID,
     int? routerId,
     bool preventDuplicates = true,
@@ -285,6 +327,20 @@ extension NavigatorStateExtension on _i11.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToCategoriesScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.categoriesScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithSplashScreen([
     int? routerId,
     bool preventDuplicates = true,
@@ -300,7 +356,7 @@ extension NavigatorStateExtension on _i11.NavigationService {
   }
 
   Future<dynamic> replaceWithLandingScreen({
-    _i10.Key? key,
+    _i11.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -343,14 +399,21 @@ extension NavigatorStateExtension on _i11.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithHomeScreen([
+  Future<dynamic> replaceWithProductsScreen({
+    _i11.Key? key,
+    bool isFromCategories = false,
+    String categoryName = "",
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
-    return replaceWith<dynamic>(Routes.homeScreen,
+  }) async {
+    return replaceWith<dynamic>(Routes.productsScreen,
+        arguments: ProductsScreenArguments(
+            key: key,
+            isFromCategories: isFromCategories,
+            categoryName: categoryName),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -372,7 +435,7 @@ extension NavigatorStateExtension on _i11.NavigationService {
   }
 
   Future<dynamic> replaceWithProductDetailsScreen({
-    _i10.Key? key,
+    _i11.Key? key,
     int? productID,
     int? routerId,
     bool preventDuplicates = true,
@@ -397,6 +460,20 @@ extension NavigatorStateExtension on _i11.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.cartScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithCategoriesScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.categoriesScreen,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
