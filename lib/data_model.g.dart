@@ -22,13 +22,15 @@ class DataModelAdapter extends TypeAdapter<DataModel> {
       ..displayName = fields[2] as String?
       ..userPhone = fields[3] as String?
       ..userEmail = fields[4] as String?
-      ..cartCount = fields[6] as int?;
+      ..cartCount = fields[6] as int?
+      ..firebaseId = fields[7] as String?
+      ..userAddress = fields[8] as String?;
   }
 
   @override
   void write(BinaryWriter writer, DataModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.userID)
       ..writeByte(1)
@@ -40,7 +42,11 @@ class DataModelAdapter extends TypeAdapter<DataModel> {
       ..writeByte(4)
       ..write(obj.userEmail)
       ..writeByte(6)
-      ..write(obj.cartCount);
+      ..write(obj.cartCount)
+      ..writeByte(7)
+      ..write(obj.firebaseId)
+      ..writeByte(8)
+      ..write(obj.userAddress);
   }
 
   @override

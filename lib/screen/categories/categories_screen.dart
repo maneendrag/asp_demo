@@ -1,6 +1,7 @@
 import 'package:asp_base/screen/categories/categories_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'dart:math' as math show Random;
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({Key? key}) : super(key: key);
@@ -40,7 +41,7 @@ class CategoriesScreen extends StatelessWidget {
                      child: Container(
                        margin: const EdgeInsets.only(left: 12, right: 12,bottom: 22),
                         decoration: BoxDecoration(
-                          color: Colors.orange,
+                          color: Colors.primaries[math.Random().nextInt(Colors.primaries.length)],
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: Padding(

@@ -79,16 +79,6 @@ class LoginScreen extends StackedHookView<LoginViewModel> {
                                 hintText: 'Enter Your Password',
                                 hintStyle:
                                     const TextStyle(color: Color(0xff3282B8)),
-                                suffixIcon: model.obscureText
-                                    ? IconButton(
-                                        onPressed: model.playLoginObscure,
-                                        icon: const Icon(Icons.remove_red_eye,
-                                            color: Colors.white))
-                                    : IconButton(
-                                        onPressed: model.playLoginObscure,
-                                        icon: Icon(
-                                            Icons.remove_moderator_outlined,
-                                            color: Colors.white)),
                                 enabledBorder: const OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 3,

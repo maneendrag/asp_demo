@@ -3,8 +3,12 @@ import 'package:asp_base/_app/app.router.dart';
 import 'package:asp_base/_app/enums/app_enums.dart';
 import 'package:asp_base/_services/http_service.dart';
 import 'package:asp_base/_services/size_config_service.dart';
+import 'package:asp_base/data_model.dart';
+import 'package:asp_base/hive_config.dart';
 import 'package:asp_base/screen/home/product_response.dart';
 import 'package:asp_base/screen/home/screens/products/proseducts_response.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../customViewModels.dart';
 
@@ -12,10 +16,11 @@ class HomeScreenViewModel extends CustomBaseViewModel {
   final ApiService _apiService = locator<ApiService>();
   final SizeConfigService sizeConfigService = locator<SizeConfigService>();
   final NavigationService navigationService = locator<NavigationService>();
-
+  final DataModel _appLevelModel =
+  HiveConfig.getSingleObject<DataModel>(HiveBox.DataModel);
   ProductsScreenView currentView = ProductsScreenView.homeScreen;
   List<Products> productsResponseList = [];
-  List<P> productsResponseeList = [];
+  // List<P> productsResponseeList = [];
 
   // ProductsResponse? productsResponse;
 
@@ -86,31 +91,31 @@ class HomeScreenViewModel extends CustomBaseViewModel {
 //     }
 //   }
 
-  Future getDat() async {
-    try {
-      print("entered try state");
-
-      var jsonResponse =
-          await _apiService.get("https://fakestoreapi.com/products");
-
-      ProductsResponse res =
-          ProductsResponse.fromJson({'data': jsonResponse.data});
-
-      productsResponseeList.addAll(res.data!);
-      print("PIN DATAARR --------> ${productsResponseeList}");
-
-      print("Type ====> ${res.data!.length}");
-      print("Type ====> ${res.data![0].image}");
-
-      notifyListeners();
-
-      // Map<String, dynamic> data = jsonDecode(jsonResponse.toString());
-
-      // print("The data ====> $dataResponse");
-    } catch (e) {
-      print("WhTA THE EXCEPTION ====> $e");
-    }
-  }
+  // Future getDat() async {
+  //   try {
+  //     print("entered try state");
+  //
+  //     var jsonResponse =
+  //         await _apiService.get("https://fakestoreapi.com/products");
+  //
+  //     ProductsResponse res =
+  //         ProductsResponse.fromJson({'data': jsonResponse.data});
+  //
+  //     productsResponseeList.addAll(res.data!);
+  //     print("PIN DATAARR --------> ${productsResponseeList}");
+  //
+  //     print("Type ====> ${res.data!.length}");
+  //     print("Type ====> ${res.data![0].image}");
+  //
+  //     notifyListeners();
+  //
+  //     // Map<String, dynamic> data = jsonDecode(jsonResponse.toString());
+  //
+  //     // print("The data ====> $dataResponse");
+  //   } catch (e) {
+  //     print("WhTA THE EXCEPTION ====> $e");
+  //   }
+  // }
 
   Future getHomeProducts(String categoryName,{required bool isFromCategoriesScreen}) async {
     setBusy(true);
@@ -150,6 +155,29 @@ class HomeScreenViewModel extends CustomBaseViewModel {
       setBusy(false);
     }
   }
+  
+  
+    Future<void> signOut() async {
+      await FirebaseAuth.instance.signOut();
+      final DataModel defaultAppLevelModel = DataModel()
+        ..userID = ""
+        ..isLoggedIn = false
+        ..displayName = ""
+       ..cartCount = 0
+        ..firebaseId = ""
+        ..userAddress = "N/A"
+        ..userPhone = ""
+        ..displayName = ""
+        ..userEmail = "";
+      
+      await HiveConfig.checkAndPutSingleObject<DataModel>(
+          HiveBox.DataModel, defaultAppLevelModel);
+      print("Appl =====>${defaultAppLevelModel.isLoggedIn}");
+      
+      navigationService.pushNamedAndRemoveUntil(Routes.landingScreen);
+
+    }
+    
 
   // Future<Either<Failure, ProductsResponse>> getECommerceResponse() async {
   //
@@ -249,13 +277,34 @@ class HomeScreenViewModel extends CustomBaseViewModel {
     changeView(ProductsScreenView.homeScreen);
   }
 
-  navigateToProductDetailsScreen(int productId) {
+  navigateToProductDetailsScreen(int index) {
     navigationService.navigateTo(Routes.productDetailsScreen,
-        arguments: ProductDetailsScreenArguments(productID: productId));
+        arguments: ProductDetailsScreenArguments(productID: productsResponseList[index].id));
   }
 
   navigateToCategoriesScreen() {
     navigationService.navigateTo(Routes.categoriesScreen);
+  }
+  navigateToPrivacyPolicyScreen() {
+    navigationService.navigateTo(Routes.privacyPolicyScreen);
+  }
+  navigateToAboutUSScreen() {
+    navigationService.navigateTo(Routes.aboutUsScreen);
+  }
+  navigateToTCScreen() {
+    navigationService.navigateTo(Routes.termsAndConditionsScreen);
+  }
+
+  navigateToProfileScreen() {
+    navigationService.navigateTo(Routes.profileScreen);
+  }
+
+  navigateToOrdersScreen() {
+    navigationService.navigateTo(Routes.ordersScreen);
+  }
+
+  navigateToCartScreen() {
+    navigationService.navigateTo(Routes.cartScreen);
   }
 
   changeView(ProductsScreenView view) {

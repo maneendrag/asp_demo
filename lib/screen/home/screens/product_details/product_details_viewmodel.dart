@@ -51,7 +51,7 @@ class ProductDetailsViewModel extends CustomBaseViewModel {
   }
 }''', variables: {
         "count": 1,
-        "user_id": "6304a45e-4c30-40b2-bc8a-73c100e4f2bc",
+        "user_id": _appLevelModel.userID,
         "product_id": productsDetailsResponse!.id,
         "product_name": productsDetailsResponse!.title,
         "price": productsDetailsResponse!.price
@@ -89,7 +89,7 @@ class ProductDetailsViewModel extends CustomBaseViewModel {
     }
   }
 }''', variables: {
-          "userID": "6304a45e-4c30-40b2-bc8a-73c100e4f2bc",
+          "userID": _appLevelModel.userID,
           "productID": productsDetailsResponse!.id,
           "count":
               action == "INCREMENT" ? cartCountNumber + 1 : cartCountNumber - 1
@@ -134,7 +134,7 @@ class ProductDetailsViewModel extends CustomBaseViewModel {
   }
 }
 ''', variables: {
-          "userID": "6304a45e-4c30-40b2-bc8a-73c100e4f2bc",
+          "userID": _appLevelModel.userID,
           "productID": productId
         });
 
@@ -208,7 +208,7 @@ class ProductDetailsViewModel extends CustomBaseViewModel {
     print("Entered cart method");
     try {
       var resp = await _httpService.query(reasonsQuerys, variables: {
-        "userID": "6304a45e-4c30-40b2-bc8a-73c100e4f2bc",
+        "userID": _appLevelModel.userID,
         "productID": productId
       });
       if (resp != null) {

@@ -17,5 +17,9 @@ class DataModel{
   String? userEmail;
   @HiveField(6)
   int? cartCount;
+  @HiveField(7)
+  String? firebaseId;
+  @HiveField(8)
+  String? userAddress;
 
 }
