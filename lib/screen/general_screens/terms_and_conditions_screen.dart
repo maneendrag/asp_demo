@@ -19,37 +19,39 @@ class TermsAndConditionsScreen extends StatelessWidget {
         ),
       )
       : Scaffold(
-        body: Column(children:  [
-          SizedBox(
-            height: 32,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              "Terms And Conditions",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24),
+        body: SafeArea(
+          child: Column(children:  [
+           
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                "Terms And Conditions",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24),
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ListView(children: [
-                Text(
-                  model.generalResponseList[0].termsConditions!,
-                  style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+            SizedBox(height: 18,),
 
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ListView(children: [
+                  Text(
+                    model.generalResponseList[0].termsConditions!,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+
+                    ),
                   ),
-                ),
-              ],),
-            ),
-          )
-        ],),
+                ],),
+              ),
+            )
+          ],),
+        ),
       );
     },);
   }

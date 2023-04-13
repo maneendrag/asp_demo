@@ -100,7 +100,7 @@ class LoginViewModel extends BaseViewModel {
 
 
         await HiveConfig.putSingleObject(HiveBox.DataModel, _appLevelModel);
-        setBusy(false);
+        // setBusy(false);
       } else {
         snackbarService.showSnackbar(message: "User Sign Up Failed");
         setBusy(false);
@@ -198,7 +198,7 @@ class LoginViewModel extends BaseViewModel {
 
         print(_appLevelModel.userID);
 
-        setBusy(false);
+        // setBusy(false);
       } else {
         print("User unsuccessful login");
         setBusy(false);
